@@ -1,0 +1,16 @@
+.maillens-badge {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-block;
+  font: 600 11px/1 system-ui, sans-serif;
+  margin: 0 0 0 6px;
+  padding: 4px 7px;
+  vertical-align: middle;
+}
+.maillens-pending { background: #e8efff; color: #2546a8; }
+.maillens-valid { background: #dcfce7; color: #166534; }
+.maillens-invalid { background: #fee2e2; color: #991b1b; }
+.maillens-risky { background: #fef3c7; color: #92400e; }
+.maillens-badge:disabled { cursor: wait; opacity: .7; }
