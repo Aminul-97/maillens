@@ -4,10 +4,12 @@
   "version": "0.1.0",
   "description": "Find and verify email addresses on any page.",
   "permissions": ["storage", "activeTab"],
+  "host_permissions": ["http://localhost:8787/*"],
   "action": {
     "default_title": "MailLens",
     "default_popup": "popup.html"
   },
+  "options_page": "options.html",
   "background": {
     "service_worker": "background.js",
     "type": "module"

@@ -1,30 +1,36 @@
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ROLE_ACCOUNTS = new Set([
-  "admin", "billing", "contact", "help", "hello", "info", "jobs", "legal",
-  "marketing", "privacy", "sales", "support", "team"
-]);
+const DEFAULT_API_URL = "http://localhost:8787";
 
-function verifyEmail(value) {
+async function verifyEmail(value) {
   const email = String(value || "").trim().toLowerCase();
-  const localPart = email.split("@")[0] || "";
+  const { verifierApiUrl = DEFAULT_API_URL } = await chrome.storage.local.get("verifierApiUrl");
 
-  if (!EMAIL_PATTERN.test(email)) {
-    return { email, status: "invalid", reason: "Invalid email format", score: 0 };
+  try {
+    const response = await fetch(`${verifierApiUrl.replace(/\/$/, "")}/verify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Verification service error");
+    return result;
+  } catch (error) {
+    return {
+      email,
+      status: "unknown",
+      reason: `MailLens verifier is unavailable: ${error.message}`,
+      score: null
+    };
   }
-
-  if (ROLE_ACCOUNTS.has(localPart)) {
-    return { email, status: "risky", reason: "Role-based address", score: 55 };
-  }
-
-  return { email, status: "valid", reason: "Syntax looks valid", score: 90 };
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, respond) => {
   if (message.type === "VERIFY_EMAIL") {
-    respond(verifyEmail(message.email));
+    verifyEmail(message.email).then(respond);
+    return true;
   }
 
   if (message.type === "VERIFY_EMAILS") {
-    respond((message.emails || []).map(verifyEmail));
+    Promise.all((message.emails || []).map(verifyEmail)).then(respond);
+    return true;
   }
 });

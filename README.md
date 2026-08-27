@@ -1,13 +1,13 @@
 # MailLens
 
-MailLens is a Chrome extension for finding email addresses on a web page and checking their initial validity.
+MailLens is a Chrome extension for finding email addresses on a web page and checking their validity with `deep-email-validator`.
 
 ## Current MVP
 
 - Detects visible email addresses and `mailto:` links
 - Adds click-to-verify badges beside standalone email text
 - Shows all discovered addresses in the extension popup
-- Performs bulk syntax and role-account checks
+- Performs syntax, typo, disposable-domain, MX, and SMTP checks through a local verification service
 
 ## Load it in Chrome
 
@@ -16,6 +16,13 @@ MailLens is a Chrome extension for finding email addresses on a web page and che
 3. Choose **Load unpacked** and select this folder: `I:\maillens`.
 4. Visit a page containing email addresses and open MailLens from the extensions toolbar.
 
-## Next integration point
+## Start the verification service
 
-`background.js` holds the verification adapter. Replace its local `verifyEmail` function with the chosen verification API once credentials and provider are decided.
+The verifier is server-side because `deep-email-validator` requires Node.js and makes DNS/SMTP connections. Install Node.js 20 or newer, then run:
+
+```powershell
+npm install
+npm start
+```
+
+It listens only on `http://localhost:8787`. The extension uses that address by default; change it under **Extension options** when deploying the service elsewhere. If you use a non-local address, add it to `host_permissions` in `manifest.json` before reloading the extension.

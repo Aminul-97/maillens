@@ -1,0 +1,8 @@
+:root { color: #172033; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+body { background: #f8fafc; margin: 0; }
+main { margin: 48px auto; max-width: 480px; padding: 24px; }
+h1 { font-size: 24px; }
+p { color: #526079; line-height: 1.5; }
+label { display: block; font-size: 14px; font-weight: 650; margin: 22px 0 7px; }
+input { border: 1px solid #b9c4d9; border-radius: 7px; box-sizing: border-box; font: inherit; padding: 10px; width: 100%; }
+button { background: #3155d9; border: 0; border-radius: 7px; color: #fff; cursor: pointer; font: inherit; font-weight: 650; margin-top: 14px; padding: 10px 14px; }
