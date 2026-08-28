@@ -1,2 +1,8 @@
 Prompt 1:
-Initiate a Chrome extension project named MailLens. 
+When user complete an email selection, there should be a verify icon. When user clicks on it, show result about it.
+
+Prompt 2:
+Fix: "Scanning this page" never ends. Also include a progress bar.
+
+Prompt 3:
+Fix: Maillense verifier is unavailable: Failed to fetch.
