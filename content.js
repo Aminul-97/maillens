@@ -83,8 +83,14 @@ async function scanPage() {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, respond) => {
-  if (message.type === "SCAN_PAGE") scanPage().then(respond);
-  if (message.type === "GET_EMAILS") respond(findEmails());
+  if (message.type === "SCAN_PAGE") {
+    scanPage().then(respond);
+    return true;
+  }
+  if (message.type === "GET_EMAILS") {
+    respond(findEmails());
+    return true;
+  }
 });
 
 scanPage();

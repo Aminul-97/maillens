@@ -13,3 +13,23 @@ li { align-items: center; border-bottom: 1px solid #e5eaf2; display: flex; font-
 li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 b { border-radius: 999px; font-size: 10px; padding: 3px 6px; text-transform: capitalize; }
 .valid { background: #dcfce7; color: #166534; }.invalid { background: #fee2e2; color: #991b1b; }.risky { background: #fef3c7; color: #92400e; }
+
+.progress-bar {
+  background: #e5eaf2;
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+#progress-bar-fill {
+  background: #3155d9;
+  height: 100%;
+  transition: width 0.2s ease-in-out;
+  width: 0%;
+}
+#progress-text {
+  color: #5e6b82;
+  font-size: 11px;
+  margin: 4px 0 12px;
+  display: block;
+}
