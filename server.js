@@ -40,7 +40,8 @@ function mapResult(email, result) {
   };
 }
 
-http.createServer((request, response) => {
+function createVerifierServer() {
+  return http.createServer((request, response) => {
   if (request.method === "OPTIONS") return send(response, 204, {});
   if (request.method !== "POST" || request.url !== "/verify") {
     return send(response, 404, { error: "Use POST /verify." });
@@ -72,6 +73,13 @@ http.createServer((request, response) => {
       send(response, message === "Verification timed out." ? 504 : 500, { error: message });
     }
   });
-}).listen(port, "127.0.0.1", () => {
+  });
+}
+
+createVerifierServer().listen(port, "127.0.0.1", () => {
   console.log(`MailLens verifier listening on http://127.0.0.1:${port}`);
+});
+
+createVerifierServer().listen(port, "::1", () => {
+  console.log(`MailLens verifier listening on http://localhost:${port}`);
 });

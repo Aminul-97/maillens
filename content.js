@@ -1,5 +1,28 @@
 const EMAIL_FINDER = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 const MARKER_CLASS = "maillens-processed";
+const VERIFICATION_ATTEMPTS = 2;
+
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function requestVerification(email) {
+  let reason = "Verification could not be completed. Please try again.";
+
+  for (let attempt = 1; attempt <= VERIFICATION_ATTEMPTS; attempt += 1) {
+    try {
+      const result = await chrome.runtime.sendMessage({ type: "VERIFY_EMAIL", email });
+      if (result?.status) return result;
+      reason = "The verifier did not return a result. Please try again.";
+    } catch (error) {
+      reason = error instanceof Error ? error.message : reason;
+    }
+
+    if (attempt < VERIFICATION_ATTEMPTS) await wait(250);
+  }
+
+  return { status: "unknown", reason };
+}
 
 function findEmails() {
   const found = new Set();
@@ -42,15 +65,7 @@ function addBadge(email) {
       event.stopPropagation();
       badge.disabled = true;
       badge.textContent = "Checking…";
-      let result;
-      try {
-        result = await chrome.runtime.sendMessage({ type: "VERIFY_EMAIL", email });
-      } catch {
-        result = {
-          status: "unknown",
-          reason: "Verification could not be completed. Please try again."
-        };
-      }
+      const result = await requestVerification(email);
       badge.className = `maillens-badge maillens-${result.status}`;
       badge.textContent = result.status;
       badge.title = result.reason;
