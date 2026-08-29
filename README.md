@@ -25,4 +25,4 @@ npm install
 npm start
 ```
 
-It listens only on `http://localhost:8787`. The extension uses that address by default; change it under **Extension options** when deploying the service elsewhere. If you use a non-local address, add it to `host_permissions` in `manifest.json` before reloading the extension.
+It listens on `http://127.0.0.1:8787` by default. The extension uses that address by default; change it under **Extension options** when deploying the service elsewhere. MailLens asks for access when you save a custom verifier URL.

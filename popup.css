@@ -5,6 +5,7 @@ header { align-items: center; display: flex; gap: 9px; }
 h1 { font-size: 19px; margin: 0; }
 .logo { align-items: center; background: #3155d9; border-radius: 8px; color: white; display: flex; font-weight: 800; height: 28px; justify-content: center; width: 28px; }
 p { color: #5e6b82; font-size: 13px; margin: 14px 0; }
+#verifier-status { color: #991b1b; margin: -4px 0 14px; }
 button { background: #3155d9; border: 0; border-radius: 7px; color: white; cursor: pointer; font: inherit; font-weight: 650; padding: 9px 12px; width: 100%; }
 button:disabled { background: #aab4cb; cursor: default; }
 ul { list-style: none; margin: 14px 0 0; max-height: 260px; overflow: auto; padding: 0; }

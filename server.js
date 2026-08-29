@@ -3,6 +3,17 @@ import { validate } from "deep-email-validator";
 
 const port = Number(process.env.PORT || 8787);
 const MAX_BODY_BYTES = 4_096;
+const VALIDATION_TIMEOUT_MS = Number(process.env.VALIDATION_TIMEOUT_MS || 12_000);
+
+function validateWithTimeout(options) {
+  let timeout;
+  const validation = validate(options);
+  const deadline = new Promise((_, reject) => {
+    timeout = setTimeout(() => reject(new Error("Verification timed out.")), VALIDATION_TIMEOUT_MS);
+  });
+
+  return Promise.race([validation, deadline]).finally(() => clearTimeout(timeout));
+}
 
 function send(response, status, body) {
   response.writeHead(status, {
@@ -47,7 +58,7 @@ http.createServer((request, response) => {
         return send(response, 400, { error: "A non-empty email is required." });
       }
       const normalizedEmail = email.trim().toLowerCase();
-      const result = await validate({
+      const result = await validateWithTimeout({
         email: normalizedEmail,
         validateRegex: true,
         validateTypo: true,
@@ -57,9 +68,10 @@ http.createServer((request, response) => {
       });
       send(response, 200, mapResult(normalizedEmail, result));
     } catch (error) {
-      send(response, 500, { error: error instanceof Error ? error.message : "Verification failed." });
+      const message = error instanceof Error ? error.message : "Verification failed.";
+      send(response, message === "Verification timed out." ? 504 : 500, { error: message });
     }
   });
 }).listen(port, "127.0.0.1", () => {
-  console.log(`MailLens verifier listening on http://localhost:${port}`);
+  console.log(`MailLens verifier listening on http://127.0.0.1:${port}`);
 });

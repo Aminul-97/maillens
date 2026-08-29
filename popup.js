@@ -1,6 +1,7 @@
 const summary = document.querySelector("#summary");
 const verifyAll = document.querySelector("#verify-all");
 const list = document.querySelector("#email-list");
+const verifierStatus = document.querySelector("#verifier-status");
 let emails = [];
 
 function render(results = []) {
@@ -29,9 +30,17 @@ async function initialize() {
 verifyAll.addEventListener("click", async () => {
   verifyAll.disabled = true;
   verifyAll.textContent = "Verifying…";
-  const results = await chrome.runtime.sendMessage({ type: "VERIFY_EMAILS", emails });
-  render(results);
-  verifyAll.textContent = "Verified";
+  try {
+    const results = await chrome.runtime.sendMessage({ type: "VERIFY_EMAILS", emails });
+    render(results);
+    const unavailable = results.find((result) => result.status === "unknown");
+    verifierStatus.textContent = unavailable ? unavailable.reason : "";
+  } catch {
+    verifierStatus.textContent = "Verification could not be completed. Please try again.";
+  } finally {
+    verifyAll.disabled = emails.length === 0;
+    verifyAll.textContent = "Verify all emails";
+  }
 });
 
 initialize();

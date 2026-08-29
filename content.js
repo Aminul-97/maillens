@@ -42,10 +42,19 @@ function addBadge(email) {
       event.stopPropagation();
       badge.disabled = true;
       badge.textContent = "Checking…";
-      const result = await chrome.runtime.sendMessage({ type: "VERIFY_EMAIL", email });
+      let result;
+      try {
+        result = await chrome.runtime.sendMessage({ type: "VERIFY_EMAIL", email });
+      } catch {
+        result = {
+          status: "unknown",
+          reason: "Verification could not be completed. Please try again."
+        };
+      }
       badge.className = `maillens-badge maillens-${result.status}`;
       badge.textContent = result.status;
       badge.title = result.reason;
+      badge.disabled = false;
     });
     target.insertAdjacentElement("afterend", badge);
   });
