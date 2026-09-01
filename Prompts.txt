@@ -2,7 +2,5 @@ Prompt 1:
 When user complete an email selection, there should be a verify icon. When user clicks on it, show result about it.
 
 Prompt 2:
-Fix: "Scanning this page" never ends. Also include a progress bar.
+Fix: Could not reach the verifier at http://127.0.0.1:8787. Start it with npm start, then try again.
 
-Prompt 3:
-Fix: Maillense verifier is unavailable: Failed to fetch.
