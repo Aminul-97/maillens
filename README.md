@@ -1,28 +1,56 @@
 # MailLens
 
-MailLens is a Chrome extension for finding email addresses on a web page and checking their validity with `deep-email-validator`.
+MailLens is a Chrome extension for finding email addresses on any web page and verifying their validity using `deep-email-validator` through a local or remote verification API service.
 
-## Current MVP
+## Project Structure
 
-- Detects visible email addresses and `mailto:` links
-- Adds click-to-verify badges beside standalone email text
-- Shows all discovered addresses in the extension popup
-- Performs syntax, typo, disposable-domain, MX, and SMTP checks through a local verification service
+```text
+maillens/
+├── maillens-api/          # Backend verification API service (Node.js)
+│   ├── package.json
+│   ├── server.js          # REST API (POST /verify, GET /health)
+│   └── README.md
+├── maillens-plugin/       # MailLens Chrome extension (Manifest V3)
+│   ├── manifest.json
+│   ├── background.js      # Service worker calling the verification API
+│   ├── content.js         # On-page email scanner and inline badge injector
+│   ├── content.css        # Badge styling
+│   ├── popup.html/.js/.css# Extension popup with batch verification
+│   ├── options.html/.js/.css# Settings page to configure API endpoint
+│   └── README.md
+├── package.json           # Root workspace scripts
+└── README.md
+```
 
-## Load it in Chrome
+## Quick Start
 
-1. Open `chrome://extensions`.
-2. Turn on **Developer mode**.
-3. Choose **Load unpacked** and select this folder: `I:\maillens`.
-4. Visit a page containing email addresses and open MailLens from the extensions toolbar.
+### 1. Start the Verification API (`maillens-api`)
 
-## Start the verification service
+The verifier is server-side because `deep-email-validator` requires Node.js and establishes DNS/SMTP connections.
 
-The verifier is server-side because `deep-email-validator` requires Node.js and makes DNS/SMTP connections. Install Node.js 20 or newer, then run:
-
-```powershell
+```bash
+cd maillens-api
 npm install
 npm start
 ```
 
-It listens on `http://127.0.0.1:8787` by default. The extension uses that address by default; change it under **Extension options** when deploying the service elsewhere. MailLens asks for access when you save a custom verifier URL.
+Or from the repository root:
+
+```bash
+npm run install:api
+npm run start:api
+```
+
+The API starts on `http://127.0.0.1:8787` by default. You can verify it is healthy:
+
+```bash
+curl http://127.0.0.1:8787/health
+```
+
+### 2. Load the Extension in Chrome (`maillens-plugin`)
+
+1. Open Google Chrome and navigate to `chrome://extensions`.
+2. Enable **Developer mode** (toggle in the top-right corner).
+3. Click **Load unpacked**.
+4. Select the `maillens-plugin` directory.
+5. Navigate to any web page with email addresses and use MailLens from your extension toolbar or via inline badges.

@@ -1,6 +1,6 @@
 Prompt 1:
-When user complete an email selection, there should be a verify icon. When user clicks on it, show result about it.
+I want to re-organize this project. With these directory root.
+maillens-api: Contains the API that uses "deep-email-validator". The plugin will use this API to validate the email.
+maillens-plugin: Contains the plugin. Just make the necessary API calls to the API.
 
-Prompt 2:
-Fix: Could not reach the verifier at http://127.0.0.1:8787. Start it with npm start, then try again.
 

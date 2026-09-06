@@ -5,7 +5,7 @@ function getUnavailableReason(apiUrl, error) {
   const message = error instanceof Error ? error.message : "Unknown connection error";
 
   if (message === "Failed to fetch" || error?.name === "AbortError") {
-    return `Could not reach the verifier at ${apiUrl}. Start it with npm start, then try again.`;
+    return `Could not reach the verifier at ${apiUrl}. Make sure maillens-api is running.`;
   }
 
   if (message.startsWith("Verification timed out")) {
