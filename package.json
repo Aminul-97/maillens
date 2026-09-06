@@ -1,16 +1,11 @@
 {
-  "name": "maillens-verifier",
+  "name": "maillens-root",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Local verification API for the MailLens Chrome extension.",
-  "engines": {
-    "node": ">=20"
-  },
+  "description": "MailLens workspace: Deep email validation Chrome extension and verification API.",
   "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "deep-email-validator": "^0.1.27"
+    "start:api": "npm --prefix maillens-api start",
+    "install:api": "npm --prefix maillens-api install"
   }
 }
